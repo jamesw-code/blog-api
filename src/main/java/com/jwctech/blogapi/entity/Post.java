@@ -1,4 +1,4 @@
-package com.jwctech.blogapi.domain;
+package com.jwctech.blogapi.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
