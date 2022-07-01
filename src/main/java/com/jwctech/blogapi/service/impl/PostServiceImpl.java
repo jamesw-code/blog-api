@@ -6,6 +6,9 @@ import com.jwctech.blogapi.repository.PostRepo;
 import com.jwctech.blogapi.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -19,18 +22,34 @@ public class PostServiceImpl implements PostService {
     public PostPayload createPost(PostPayload postPayload) {
 
         //Convert Payload to Entity
+        Post post = mapToPost(postPayload);
+        //Create Entity
+        Post newPost = postRepo.save(post);
+        //Convert Post Entity to Payload
+        PostPayload postResponse = mapToPayload(newPost);
+        return postResponse;
+    }
+
+    @Override
+    public List<PostPayload> getAllPost() {
+        List<Post> posts = postRepo.findAll();
+        return posts.stream().map(post -> mapToPayload(post)).collect(Collectors.toList());
+    }
+    //Convert Post Entity to Payload
+    private PostPayload mapToPayload(Post post) {
+        PostPayload postPayload = new PostPayload();
+        postPayload.setId(post.getId());
+        postPayload.setTitle(post.getTitle());
+        postPayload.setDescription(post.getDescription());
+        postPayload.setContent(post.getContent());
+        return postPayload;
+    }
+    //Convert Payload to Entity
+    private Post mapToPost(PostPayload postPayload){
         Post post = new Post();
         post.setTitle(postPayload.getTitle());
         post.setDescription(postPayload.getDescription());
         post.setContent(postPayload.getContent());
-
-        //Convert Post Entity to Payload
-        Post newPost = postRepo.save(post);
-        PostPayload postResponse = new PostPayload();
-        postResponse.setId(newPost.getId());
-        postResponse.setTitle(newPost.getTitle());
-        postResponse.setDescription(newPost.getDescription());
-        postResponse.setContent(newPost.getContent());
-        return postResponse;
+        return post;
     }
 }
