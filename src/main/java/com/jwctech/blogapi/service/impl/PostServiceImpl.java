@@ -1,6 +1,7 @@
 package com.jwctech.blogapi.service.impl;
 
 import com.jwctech.blogapi.entity.Post;
+import com.jwctech.blogapi.exception.ResourceNotFoundException;
 import com.jwctech.blogapi.payload.PostPayload;
 import com.jwctech.blogapi.repository.PostRepo;
 import com.jwctech.blogapi.service.PostService;
@@ -35,6 +36,34 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepo.findAll();
         return posts.stream().map(post -> mapToPayload(post)).collect(Collectors.toList());
     }
+
+    @Override
+    public PostPayload getById(Long id) {
+        Post post = postRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id", id.toString()));
+        return mapToPayload(post);
+    }
+
+    @Override
+    public PostPayload updatePost(PostPayload postPayload, Long id) {
+        //Get Post by ID
+        Post post = postRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id", id.toString()));
+        //Update from Payload
+        post.setTitle(postPayload.getTitle());
+        post.setDescription(postPayload.getDescription());
+        post.setContent(postPayload.getContent());
+
+        Post updatedPost = postRepo.save(post);
+
+        return mapToPayload(updatedPost);
+    }
+
+    @Override
+    public void deletePost(Long id) {
+        //Get Post by ID
+        Post post = postRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post","id", id.toString()));
+        postRepo.delete(post);
+    }
+
     //Convert Post Entity to Payload
     private PostPayload mapToPayload(Post post) {
         PostPayload postPayload = new PostPayload();

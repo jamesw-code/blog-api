@@ -8,4 +8,10 @@ public interface PostService {
     PostPayload createPost(PostPayload PostPayload);
 
     List<PostPayload> getAllPost();
+
+    PostPayload getById(Long Id);
+
+    PostPayload updatePost(PostPayload postPayload, Long id);
+
+    void deletePost(Long id);
 }

@@ -28,4 +28,21 @@ public class PostController {
     public ResponseEntity<List<PostPayload>> getAllPost(){
         return new ResponseEntity<>(postService.getAllPost(), HttpStatus.OK);
     }
+    //Get Post by ID Rest API
+    @GetMapping("/{id}")
+    public ResponseEntity<PostPayload> getPostById(@PathVariable(name = "id")Long id){
+        return new ResponseEntity<>(postService.getById(id), HttpStatus.OK);
+    }
+    //Update Post by ID Rest API
+    @PutMapping("/{id}")
+    public ResponseEntity<PostPayload> updatePostById(
+            @RequestBody PostPayload postPayload,
+            @PathVariable(name="id")Long id){
+        return new ResponseEntity<>(postService.updatePost(postPayload, id), HttpStatus.OK);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePostById(@PathVariable(name="id")Long id) {
+        postService.deletePost(id);
+        return ResponseEntity.ok("Post Delete Successful!");
+    }
 }
