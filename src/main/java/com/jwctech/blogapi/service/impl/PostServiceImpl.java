@@ -23,7 +23,7 @@ public class PostServiceImpl implements PostService {
     public PostPayload createPost(PostPayload postPayload) {
 
         //Convert Payload to Entity
-        Post post = mapToPost(postPayload);
+        Post post = mapToEntity(postPayload);
         //Create Entity
         Post newPost = postRepo.save(post);
         //Convert Post Entity to Payload
@@ -74,7 +74,7 @@ public class PostServiceImpl implements PostService {
         return postPayload;
     }
     //Convert Payload to Entity
-    private Post mapToPost(PostPayload postPayload){
+    private Post mapToEntity(PostPayload postPayload){
         Post post = new Post();
         post.setTitle(postPayload.getTitle());
         post.setDescription(postPayload.getDescription());
