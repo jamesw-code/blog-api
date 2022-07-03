@@ -9,4 +9,6 @@ public interface CommentService {
     CommentPayload createComment(Long postId, CommentPayload commentPayload);
 
     List<CommentPayload> getCommentsByPostId(Long postId);
+
+    CommentPayload getCommentById(Long postId, Long commentId);
 }

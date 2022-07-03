@@ -2,11 +2,13 @@ package com.jwctech.blogapi.service.impl;
 
 import com.jwctech.blogapi.entity.Comment;
 import com.jwctech.blogapi.entity.Post;
+import com.jwctech.blogapi.exception.BlogAPIException;
 import com.jwctech.blogapi.exception.ResourceNotFoundException;
 import com.jwctech.blogapi.payload.CommentPayload;
 import com.jwctech.blogapi.repository.CommentRepo;
 import com.jwctech.blogapi.repository.PostRepo;
 import com.jwctech.blogapi.service.CommentService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,6 +49,23 @@ public class CommentServiceImpl implements CommentService {
 
         return comments.stream().map(comment -> mapToPayload(comment)).collect(Collectors.toList());
 
+    }
+
+    @Override
+    public CommentPayload getCommentById(Long postId, Long commentId) {
+        //Retrieve Post entity by id
+        Post post = postRepo.findById(postId).orElseThrow(
+                ()-> new ResourceNotFoundException("Post", "id", postId.toString()));
+
+        //Retrieve Comment by id
+        Comment comment = commentRepo.findById(commentId).orElseThrow(
+                () ->new ResourceNotFoundException("Comment", "id", postId.toString()));
+        //Validate if Comment Belongs to Post TODO:BlogAPIException not working properly
+        if(!comment.getPost().getId().equals(post.getId())){
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post.");
+        }
+
+        return mapToPayload(comment);
     }
 
     public CommentPayload mapToPayload(Comment comment){
