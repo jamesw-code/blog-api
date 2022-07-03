@@ -1,6 +1,5 @@
 package com.jwctech.blogapi.payload;
 
-import com.jwctech.blogapi.entity.Comment;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
