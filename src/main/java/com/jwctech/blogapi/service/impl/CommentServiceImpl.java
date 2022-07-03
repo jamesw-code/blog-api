@@ -9,6 +9,9 @@ import com.jwctech.blogapi.repository.PostRepo;
 import com.jwctech.blogapi.service.CommentService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -35,6 +38,15 @@ public class CommentServiceImpl implements CommentService {
         Comment newComment = commentRepo.save(comment);
 
         return mapToPayload(newComment);
+    }
+
+    @Override
+    public List<CommentPayload> getCommentsByPostId(Long postId) {
+        //Retrieve Comments by postId
+        List<Comment> comments = commentRepo.findByPostId(postId);
+
+        return comments.stream().map(comment -> mapToPayload(comment)).collect(Collectors.toList());
+
     }
 
     public CommentPayload mapToPayload(Comment comment){
