@@ -5,6 +5,7 @@ import com.jwctech.blogapi.exception.ResourceNotFoundException;
 import com.jwctech.blogapi.payload.PostPayload;
 import com.jwctech.blogapi.repository.PostRepo;
 import com.jwctech.blogapi.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,11 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
     private PostRepo postRepo;
+    private ModelMapper mapper;
 
-    public PostServiceImpl(PostRepo postRepo) {
+    public PostServiceImpl(PostRepo postRepo, ModelMapper mapper) {
         this.postRepo = postRepo;
+        this.mapper = mapper;
     }
 
     @Override
@@ -66,19 +69,20 @@ public class PostServiceImpl implements PostService {
 
     //Convert Post Entity to Payload
     private PostPayload mapToPayload(Post post) {
-        PostPayload postPayload = new PostPayload();
-        postPayload.setId(post.getId());
-        postPayload.setTitle(post.getTitle());
-        postPayload.setDescription(post.getDescription());
-        postPayload.setContent(post.getContent());
+        PostPayload postPayload = mapper.map(post, PostPayload.class);
+//        postPayload.setId(post.getId());
+//        postPayload.setTitle(post.getTitle());
+//        postPayload.setDescription(post.getDescription());
+//        postPayload.setContent(post.getContent());
         return postPayload;
     }
     //Convert Payload to Entity
     private Post mapToEntity(PostPayload postPayload){
-        Post post = new Post();
-        post.setTitle(postPayload.getTitle());
-        post.setDescription(postPayload.getDescription());
-        post.setContent(postPayload.getContent());
+        Post post = mapper.map(postPayload, Post.class);
+//        Post post = new Post();
+//        post.setTitle(postPayload.getTitle());
+//        post.setDescription(postPayload.getDescription());
+//        post.setContent(postPayload.getContent());
         return post;
     }
 }
