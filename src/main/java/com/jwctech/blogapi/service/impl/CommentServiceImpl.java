@@ -8,6 +8,7 @@ import com.jwctech.blogapi.payload.CommentPayload;
 import com.jwctech.blogapi.repository.CommentRepo;
 import com.jwctech.blogapi.repository.PostRepo;
 import com.jwctech.blogapi.service.CommentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,12 @@ public class CommentServiceImpl implements CommentService {
 
     private CommentRepo commentRepo;
     private PostRepo postRepo;
+    private ModelMapper mapper;
 
-    public CommentServiceImpl(CommentRepo commentRepo, PostRepo postRepo) {
+    public CommentServiceImpl(CommentRepo commentRepo, PostRepo postRepo, ModelMapper mapper) {
         this.commentRepo = commentRepo;
         this.postRepo = postRepo;
+        this.mapper = mapper;
     }
 
     @Override
@@ -88,19 +91,21 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public CommentPayload mapToPayload(Comment comment){
-        CommentPayload commentPayload = new CommentPayload();
-        commentPayload.setId(comment.getId());
-        commentPayload.setName(comment.getName());
-        commentPayload.setEmail(comment.getEmail());
-        commentPayload.setBody(comment.getBody());
+        CommentPayload commentPayload = mapper.map(comment, CommentPayload.class);
+//        CommentPayload commentPayload = new CommentPayload();
+//        commentPayload.setId(comment.getId());
+//        commentPayload.setName(comment.getName());
+//        commentPayload.setEmail(comment.getEmail());
+//        commentPayload.setBody(comment.getBody());
         return commentPayload;
     }
     public Comment mapToEntity(CommentPayload commentPayload){
-        Comment comment = new Comment();
-        comment.setId(commentPayload.getId());
-        comment.setName(commentPayload.getName());
-        comment.setEmail(commentPayload.getEmail());
-        comment.setBody(commentPayload.getBody());
+        Comment comment = mapper.map(commentPayload, Comment.class);
+//        Comment comment = new Comment();
+//        comment.setId(commentPayload.getId());
+//        comment.setName(commentPayload.getName());
+//        comment.setEmail(commentPayload.getEmail());
+//        comment.setBody(commentPayload.getBody());
         return comment;
     }
 
